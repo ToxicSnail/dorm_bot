@@ -1,118 +1,116 @@
 import telebot
 import os
 import time
-from selenium import webdriver
+import subprocess
 from telebot import types
 
 api = open("api.txt", "r").read()
 
 bot = telebot.TeleBot(api)
 
-# Dictionary to store YouTube links
+# Словарь для хранения ссылок на YouTube
 youtube_links = {}
 
-# User states
+# Состояния пользователя
+USER_STATES = {}
+
+# Состояния пользователя
 MENU_STATE = "menu"
 YT_MENU_STATE = "yt_menu"
 YT_LINK_STATE = "yt_link"
 YT_RANDOM_GENRE_STATE = "yt_random_genre"
-YT_PLAYING_STATE = "yt_playing"
-
-# Dictionary to store the current playing status
-playing_status = {}
 
 
-# Command handler /start
+# Обработчик команды /start
 @bot.message_handler(commands=['start'])
 def handle_start(message):
     user_id = message.from_user.id
     youtube_links[user_id] = []
-    playing_status[user_id] = False
-    set_user_state(user_id, MENU_STATE)
+    USER_STATES[user_id] = MENU_STATE
 
-    # Keyboard with the button "Play music from YouTube"
+    # Клавиатура с кнопкой "Запустить музыку с YouTube"
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    item = types.KeyboardButton("Play music from YouTube")
+    item = types.KeyboardButton("Запустить музыку с YouTube")
     markup.add(item)
 
     bot.send_message(message.chat.id,
-                     f"Hello, {message.from_user.first_name}! I'm a bot that works with YouTube videos. "
-                     "Please choose an action:",
+                     f"Привет, {message.from_user.first_name}! Я бот, который работает с видео на YouTube. "
+                     "Пожалуйста, выберите действие:",
                      reply_markup=markup)
 
 
-# Command handler /help
+# Обработчик команды /help
 @bot.message_handler(commands=['help'])
 def handle_help(message):
     bot.send_message(message.chat.id,
-                     "Hello! I'm a bot for working with YouTube videos. Here's what I can do:\n"
-                     "/start - start the process of working with videos\n"
-                     "/help - show this message with instructions\n"
-                     "/list - view the list of sent links\n"
-                     "/clear - clear the list of sent links\n"
-                     "Simply send me a link to a YouTube video, and I'll play it for you.")
+                     "Привет! Я бот для работы с видео на YouTube. Вот что я могу:\n"
+                     "/start - начать процесс работы с видео\n"
+                     "/help - показать это сообщение с инструкциями\n"
+                     "/list - просмотреть список отправленных ссылок\n"
+                     "/clear - очистить список отправленных ссылок\n"
+                     "/stop - остановить проигрывание видео (если активно)\n"
+                     "Просто отправьте мне ссылку на видео YouTube, и я открою ее для вас.")
 
 
-# Text message handler
+# Обработчик текстовых сообщений
 @bot.message_handler(func=lambda message: True)
 def handle_text(message):
     user_id = message.from_user.id
     text = message.text
 
-    if get_user_state(user_id) == MENU_STATE:
+    if USER_STATES.get(user_id) == MENU_STATE:
         handle_menu(message)
-    elif get_user_state(user_id) == YT_MENU_STATE:
+    elif USER_STATES.get(user_id) == YT_MENU_STATE:
         handle_yt_menu(message)
-    elif get_user_state(user_id) == YT_LINK_STATE:
+    elif USER_STATES.get(user_id) == YT_LINK_STATE:
         handle_yt_link(message)
-    elif get_user_state(user_id) == YT_RANDOM_GENRE_STATE:
+    elif USER_STATES.get(user_id) == YT_RANDOM_GENRE_STATE:
         handle_yt_random_genre(message)
-    elif get_user_state(user_id) == YT_PLAYING_STATE:
-        handle_stop(message)
 
 
-# Menu handler
+# Обработчик главного меню
 def handle_menu(message):
     user_id = message.from_user.id
     text = message.text
 
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    item1 = types.KeyboardButton("Play a specific video/music from YouTube")
-    item2 = types.KeyboardButton("Random")
+    item1 = types.KeyboardButton("Включить определенное видео/музыку с YouTube")
+    item2 = types.KeyboardButton("Случайное")
     item3 = types.KeyboardButton("/stop")
-    item4 = types.KeyboardButton("Return to the main menu")
+    item4 = types.KeyboardButton("Вернуться в главное меню")
 
     markup.row(item1, item2)
     markup.row(item3, item4)
 
-    bot.send_message(message.chat.id, "Choose which music you want to play:", reply_markup=markup)
-    set_user_state(user_id, YT_MENU_STATE)
+    bot.send_message(message.chat.id, "Выберите, какую музыку вы хотите включить:", reply_markup=markup)
+
+    USER_STATES[user_id] = YT_MENU_STATE
 
 
-# Menu handler for YouTube options
+# Обработчик меню выбора музыки с YouTube
 def handle_yt_menu(message):
     user_id = message.from_user.id
     text = message.text
 
-    if text == "Play a specific video/music from YouTube":
-        bot.send_message(message.chat.id, "Please send me a link to a YouTube video:")
-        set_user_state(user_id, YT_LINK_STATE)
-    elif text == "Random":
-        bot.send_message(message.chat.id, "Enter the genre for random music:")
-        set_user_state(user_id, YT_RANDOM_GENRE_STATE)
+    if text == "Включить определенное видео/музыку с YouTube":
+        bot.send_message(message.chat.id, "Пожалуйста, отправьте мне ссылку на видео YouTube:")
+        USER_STATES[user_id] = YT_LINK_STATE
+    elif text == "Случайное":
+        bot.send_message(message.chat.id, "Введите жанр для случайной музыки:")
+        USER_STATES[user_id] = YT_RANDOM_GENRE_STATE
     elif text == "/stop":
         handle_stop(message)
-    elif text == "Return to the main menu":
-        set_user_state(user_id, MENU_STATE)
+    elif text == "Вернуться в главное меню":
+        USER_STATES[user_id] = MENU_STATE
         handle_start(message)
 
 
-# Link input handler for YouTube music
+# Обработчик ввода ссылки на музыку с YouTube
 def handle_yt_link(message):
     user_id = message.from_user.id
     text = message.text
 
-    # Check if the message looks like a YouTube link
+    # Проверяем, что сообщение похоже на ссылку YouTube
     if 'youtube.com/watch' in text or 'youtu.be/' in text:
         if user_id not in youtube_links:
             youtube_links[user_id] = []
@@ -121,60 +119,60 @@ def handle_yt_link(message):
         with open(f"youtube_links_{user_id}.txt", "a") as file:
             file.write(text + "\n")
 
-        stop_playing(user_id)
-        # Open a new tab in the browser with the parameter "autoplay=1"
-        driver = webdriver.Chrome()
-        driver.get(text + "?autoplay=1")
-        playing_status[user_id] = True
-        set_user_state(user_id, YT_PLAYING_STATE)
+        subprocess.Popen("pkill chromium", shell=True)
+        time.sleep(2)
+        # Открываем новую вкладку в браузере Chromium с параметром "autoplay=1"
+        webbrowser.open(f"chromium-browser --no-sandbox {text}?autoplay=1")
     else:
-        bot.send_message(message.chat.id, "Please send a valid YouTube video link.")
+        bot.send_message(message.chat.id, "Пожалуйста, отправьте действительную ссылку на видео YouTube.")
 
-    # Return the user to the main menu
-    set_user_state(user_id, MENU_STATE)
+    # Возвращаем пользователя в главное меню
+    USER_STATES[user_id] = MENU_STATE
 
 
-# Random music genre input handler
+# Обработчик остановки проигрывания
+def handle_stop(message):
+    user_id = message.from_user.id
+    if user_id in youtube_links:
+        try:
+            subprocess.Popen("pkill chromium", shell=True)
+            bot.send_message(message.chat.id, "Проигрывание остановлено.")
+        except Exception as e:
+            print(f"Ошибка при остановке проигрывания: {e}")
+        del youtube_links[user_id]
+    else:
+        bot.send_message(message.chat.id, "Проигрывание видео не активно.")
+
+
+# Обработчик ввода жанра для случайной музыки
 def handle_yt_random_genre(message):
     user_id = message.from_user.id
     text = message.text
 
-    # Implement logic to play random video from YouTube based on the genre
-    bot.send_message(message.chat.id, f"Playing random music from the genre: {text} (not implemented yet).")
+    # Implement logic to play a random video from YouTube based on the genre
+    bot.send_message(message.chat.id, f"Играет случайная музыка из жанра: {text} (пока не реализовано).")
 
-    # Return the user to the main menu
-    set_user_state(user_id, MENU_STATE)
-
-
-# Stop playback handler
-def handle_stop(message):
-    user_id = message.from_user.id
-
-    if user_id in playing_status and playing_status[user_id]:
-        playing_status[user_id] = False
-        set_user_state(user_id, MENU_STATE)
-        bot.send_message(message.chat.id, "Playback stopped.")
-    else:
-        bot.send_message(message.chat.id, "Playback is not active.")
+    # Возвращаем пользователя в главное меню
+    USER_STATES[user_id] = MENU_STATE
 
 
-# Command handler /list
+# Обработчик команды /list
 @bot.message_handler(commands=['list'])
 def handle_list(message):
     user_id = message.from_user.id
     if user_id in youtube_links:
         links = youtube_links[user_id]
         if links:
-            bot.send_message(message.chat.id, "Your sent YouTube links:")
+            bot.send_message(message.chat.id, "Ваши отправленные ссылки на YouTube:")
             for i, link in enumerate(links, 1):
                 bot.send_message(message.chat.id, f"{i}. {link}")
         else:
-            bot.send_message(message.chat.id, "You haven't sent any YouTube links yet.")
+            bot.send_message(message.chat.id, "Вы пока не отправили ни одной ссылки на YouTube.")
     else:
-        bot.send_message(message.chat.id, "You haven't sent any YouTube links yet.")
+        bot.send_message(message.chat.id, "Вы пока не отправили ни одной ссылки на YouTube.")
 
 
-# Command handler /clear
+# Обработчик команды /clear
 @bot.message_handler(commands=['clear'])
 def handle_clear(message):
     user_id = message.from_user.id
@@ -182,26 +180,10 @@ def handle_clear(message):
         youtube_links[user_id] = []
         with open(f"youtube_links_{user_id}.txt", "w") as file:
             file.write("")
-        bot.send_message(message.chat.id, "The list of sent links has been cleared.")
+        bot.send_message(message.chat.id, "Список отправленных ссылок очищен.")
     else:
-        bot.send_message(message.chat.id, "You don't have any sent links to clear.")
+        bot.send_message(message.chat.id, "У вас нет отправленных ссылок для очистки.")
 
 
-# Helper function to set the user state
-def set_user_state(user_id, state):
-    USER_STATES[user_id] = state
-
-
-# Helper function to get the user state
-def get_user_state(user_id):
-    return USER_STATES.get(user_id, MENU_STATE)
-
-
-# Helper function to stop playback
-def stop_playing(user_id):
-    if user_id in playing_status and playing_status[user_id]:
-        playing_status[user_id] = False
-
-
-# Start the bot
+# Запуск бота
 bot.polling(none_stop=True)

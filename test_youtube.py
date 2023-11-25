@@ -1,7 +1,7 @@
 import telebot
 import os
 import time
-import subprocess
+from selenium import webdriver
 from telebot import types
 
 api = open("api.txt", "r").read()
@@ -122,11 +122,10 @@ def handle_yt_link(message):
             file.write(text + "\n")
 
         stop_playing(user_id)
-        time.sleep(2)
-        # Open a new tab in the Chromium browser with the parameter "autoplay=1"
-        subprocess.Popen(["chromium-browser", text + "?autoplay=1"])
-        time.sleep(5)
-        subprocess.Popen(["chromium-browser", text + "?autoplay=1"])
+        # Open a new tab in the browser with the parameter "autoplay=1"
+        driver = webdriver.Chrome()
+        driver.get(text + "?autoplay=1")
+        playing_status[user_id] = True
         set_user_state(user_id, YT_PLAYING_STATE)
     else:
         bot.send_message(message.chat.id, "Please send a valid YouTube video link.")
@@ -152,10 +151,9 @@ def handle_stop(message):
     user_id = message.from_user.id
 
     if user_id in playing_status and playing_status[user_id]:
-        subprocess.Popen(["pkill", "chromium-browser"])
-        bot.send_message(message.chat.id, "Playback stopped.")
         playing_status[user_id] = False
         set_user_state(user_id, MENU_STATE)
+        bot.send_message(message.chat.id, "Playback stopped.")
     else:
         bot.send_message(message.chat.id, "Playback is not active.")
 
@@ -202,7 +200,6 @@ def get_user_state(user_id):
 # Helper function to stop playback
 def stop_playing(user_id):
     if user_id in playing_status and playing_status[user_id]:
-        subprocess.Popen(["pkill", "chromium-browser"])
         playing_status[user_id] = False
 
 

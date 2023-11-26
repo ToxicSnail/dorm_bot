@@ -53,11 +53,12 @@ def handle_help(message):
 
 # Обработчик команды /stop
 @bot.message_handler(commands=['stop'])
+# Обработчик остановки проигрывания
 def handle_stop(message):
     user_id = message.from_user.id
     if user_id in youtube_links:
         try:
-            subprocess.Popen("taskkill /f /im chrome.exe", shell=True)
+            subprocess.Popen("pkill chromium", shell=True)
             bot.send_message(message.chat.id, "Проигрывание остановлено.")
         except Exception as e:
             print(f"Ошибка при остановке проигрывания: {e}")
@@ -123,7 +124,7 @@ def handle_yt_link(message):
     text = message.text
 
     # Проверяем, что сообщение похоже на ссылку YouTube
-    if 'youtube.com/watch' in text or 'youtu.be/' in text:
+    if 'youtube.com/' in text or 'youtu.be/' in text:
         if user_id not in youtube_links:
             youtube_links[user_id] = []
 
@@ -131,12 +132,13 @@ def handle_yt_link(message):
         with open(f"youtube_links_{user_id}.txt", "a") as file:
             file.write(text + "\n")
 
-        subprocess.Popen("taskkill /f /im chrome.exe", shell=True)
-        time.sleep(2)
+        subprocess.Popen("pkill chromium", shell=True)
+        
+        #time.sleep(2)
         # Открываем новую вкладку в браузере Chromium с параметром "autoplay=1"
-        webbrowser.open(text + "?autoplay=1")  # Предполагается, что "chromium" это имя, под которым Chromium зарегистрирован
-        #time.sleep(5)
-        #webbrowser.open(text + "?autoplay=1")
+        webbrowser.open("https://www.youtube.com/watch?v=0idvYIGCiG8")  # Предполагается, что "chromium" это имя, под которым Chromium зарегистрирован
+        time.sleep(5)
+        webbrowser.open(text + "?autoplay=1")
     else:
         bot.send_message(message.chat.id, "Пожалуйста, отправьте действительную ссылку на видео YouTube.")
 

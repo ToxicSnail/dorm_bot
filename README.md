@@ -30,7 +30,6 @@ This project uses a Telegram bot that interacts with video data through a connec
    Before launching the bot, you must first encrypt a password that will be used for bot access:
    ```bash
    python encryptor.py
-   'Follow the prompts to enter and encrypt the password. The encrypted password will be saved in secret.txt.'
 1. **Configure your Telegram API token:**
    Ensure you have a valid Telegram API token and save it in a file named api.txt.
 4. **Run the bot:**

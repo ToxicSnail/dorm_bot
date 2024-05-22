@@ -33,8 +33,8 @@ This project uses a Telegram bot that interacts with video data through a connec
 3. Interact with the bot on Telegram to access its functionalities.
 
 ## Configuration
-- **The bot uses a camera connected through /dev/video0 with a resolution of 640x426 pixels.
-- **Videos are processed and streamed in the specified format and quality.
+- The bot uses a camera connected through /dev/video0 with a resolution of 640x426 pixels.
+- Videos are processed and streamed in the specified format and quality.
 
 ## License
 This is project open-sourse.

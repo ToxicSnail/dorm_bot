@@ -1,7 +1,7 @@
 # Multimedia Manager Bot
 
 ## Description
-This project uses a Telegram bot that interacts with video data through a connected camera. It has the capabilities to capture, process and stream video data, as well as download videos from YouTube, followed by the inclusion of a file.
+This project features a Telegram bot that interacts with video data via a connected camera. It is capable of capturing, processing, and streaming video data. Additionally, the bot can download videos from YouTube and supports playback of these files.
 
 ## Features
 - **Video Capture & Processing:** Utilizes `pygame.camera` for handling video operations.

@@ -1,4 +1,4 @@
-# Camera-Enhanced Telegram Bot
+# Multimedia Manager Bot
 
 ## Description
 This project uses a Telegram bot that interacts with video data through a connected camera. It has the capabilities to capture, process and stream video data, as well as download videos from YouTube, followed by the inclusion of a file.

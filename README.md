@@ -7,7 +7,7 @@ This project uses a Telegram bot that interacts with video data through a connec
 - **Video Capture & Processing:** Utilizes `pygame.camera` for handling video operations.
 - **Video Streaming:** Streams video data efficiently.
 - **YouTube Downloads:** Integrates `pytube` for downloading videos directly through the bot.
-- **Play downloaded youtube mp3/mp4 files
+- **Play downloaded** youtube mp3/mp4 files
 
 ## Requirements
 - Python 3.x

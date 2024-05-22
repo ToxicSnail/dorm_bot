@@ -29,7 +29,7 @@ This project uses a Telegram bot that interacts with video data through a connec
 1. Ensure you have a valid Telegram API token and save it in a file named api.txt.
 2. Run the script:
    ```bash
-   python final_updated_main_bot.py
+   python dorm.py
 3. Interact with the bot on Telegram to access its functionalities.
 
 ## Configuration

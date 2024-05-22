@@ -1,7 +1,7 @@
 # Camera-Enhanced Telegram Bot
 
 ## Description
-This project involves a Telegram bot that interacts with video data via a connected camera. It features capabilities to capture, process, and stream video data, as well as download videos from YouTube.
+This project uses a Telegram bot that interacts with video data through a connected camera. It has the capabilities to capture, process and stream video data, as well as download videos from YouTube, followed by the inclusion of a file.
 
 ## Features
 - **Video Capture & Processing:** Utilizes `pygame.camera` for handling video operations.
@@ -35,3 +35,8 @@ This project involves a Telegram bot that interacts with video data via a connec
 ## Configuration
 - **The bot uses a camera connected through /dev/video0 with a resolution of 640x426 pixels.
 - **Videos are processed and streamed in the specified format and quality.
+
+## License
+This is project open-sourse.
+I developted this in my course work in University
+@Gorky Kirill

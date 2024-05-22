@@ -21,7 +21,7 @@ This project features a Telegram bot that interacts with video data via a connec
    ```bash
    git clone https://github.com/ToxicSnail/dorm_bot.git
    cd dorm_bot.git
-2. **Install the necessary Python packages:
+2. **Install the necessary Python packages:**
    ```bash
    pip install -r requirements.txt
 

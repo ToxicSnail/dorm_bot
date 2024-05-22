@@ -26,11 +26,17 @@ This project uses a Telegram bot that interacts with video data through a connec
    pip install -r requirements.txt
 
 ## Usage
-1. Ensure you have a valid Telegram API token and save it in a file named api.txt.
-2. Run the script:
+1. **Encrypt your password:**
+   Before launching the bot, you must first encrypt a password that will be used for bot access:
+   ```bash
+   python encryptor.py
+   'Follow the prompts to enter and encrypt the password. The encrypted password will be saved in secret.txt.'
+1. **Configure your Telegram API token:**
+   Ensure you have a valid Telegram API token and save it in a file named api.txt.
+4. **Run the bot:**
    ```bash
    python dorm.py
-3. Interact with the bot on Telegram to access its functionalities.
+5. **Interact with the bot on Telegram to access its functionalities.**
 
 ## Configuration
 - The bot uses a camera connected through /dev/video0 with a resolution of 640x426 pixels.

@@ -25,13 +25,13 @@ This project involves a Telegram bot that interacts with video data via a connec
    ```bash
    pip install -r requirements.txt
 
-##Usage
+## Usage
 1. Ensure you have a valid Telegram API token and save it in a file named api.txt.
 2. Run the script:
    ```bash
    python final_updated_main_bot.py
 3. Interact with the bot on Telegram to access its functionalities.
 
-##Configuration
+## Configuration
 - **The bot uses a camera connected through /dev/video0 with a resolution of 640x426 pixels.
 - **Videos are processed and streamed in the specified format and quality.

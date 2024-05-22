@@ -7,6 +7,7 @@ This project involves a Telegram bot that interacts with video data via a connec
 - **Video Capture & Processing:** Utilizes `pygame.camera` for handling video operations.
 - **Video Streaming:** Streams video data efficiently.
 - **YouTube Downloads:** Integrates `pytube` for downloading videos directly through the bot.
+- **Play downloaded youtube mp3/mp4 files
 
 ## Requirements
 - Python 3.x
@@ -18,5 +19,19 @@ This project involves a Telegram bot that interacts with video data via a connec
 ## Setup
 1. **Clone the repository:**
    ```bash
-   git clone <repository-url>
-   cd <repository-directory>
+   git clone https://github.com/ToxicSnail/dorm_bot.git
+   cd dorm_bot.git
+2. **Install the necessary Python packages:
+   ```bash
+   pip install -r requirements.txt
+
+##Usage
+1. Ensure you have a valid Telegram API token and save it in a file named api.txt.
+2. Run the script:
+   ```bash
+   python final_updated_main_bot.py
+3. Interact with the bot on Telegram to access its functionalities.
+
+##Configuration
+- **The bot uses a camera connected through /dev/video0 with a resolution of 640x426 pixels.
+- **Videos are processed and streamed in the specified format and quality.
